@@ -19,10 +19,6 @@ int main() {
     printf("Initial Height: ");
         scanf("%lf", &iniH);
 
-    if (iniAngle < 0) { // when the intial angle is less than 0
-        printf("Negative angles dont work yet sorry.\n");
-    }
-
     double iniAngleRad = iniAngle * (M_PI / 180.0);
     
     double uX = u * cos(iniAngleRad); // initial x component of velocity
@@ -37,15 +33,15 @@ int main() {
         flightTime = sqrt(2 * -iniH / g);
         printf("Total flight time: %lf s\n", flightTime);
 
-    } else { // if initial angle is >0, assume initial y component is positive
+    } else { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
         double maxS = (-pow(uY, 2) / (2 * g) + iniH); // maximum height reached
         double maxStime = -uY / g; // what time it reached max height
         printf("Max height: %lf m | @t = %lf s\n", maxS, maxStime);
 
-        flightTime =  (-2 * uY / g) + ((-uY + sqrt(pow(uY, 2) + 2 * g * iniH)) / g); // total time of flight
+        flightTime = (-uY - sqrt(pow(uY, 2) + 2 * g * -iniH)) / g;
         printf("Total flight time: %lf s\n", flightTime);
-    }
 
+    } 
     double fX = uX * flightTime; // total X distance traveled
     printf("Total X distance traveled: %lf m\n", fX);
 
