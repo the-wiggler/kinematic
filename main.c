@@ -44,6 +44,15 @@ int main() {
     } 
     double fX = uX * flightTime; // total X distance traveled
     printf("Total X distance traveled: %lf m\n", fX);
+    ////////////////////////
+    int pathRes = 30;
+    int i;
+    double pathArrayX[pathRes];
+    double pathArrayY[pathRes];
+    for (i = 0; i < pathRes; i++) {
+        printf("%lf\n", pathArrayY[i]);
+    }
+
 
     return 0;
 }
