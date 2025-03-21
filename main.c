@@ -42,6 +42,7 @@ int main() {
         printf("Total flight time: %lf s\n", flightTime);
 
     } 
+    
     double fX = uX * flightTime; // total X distance traveled
     printf("Total X distance traveled: %lf m\n", fX);
 
@@ -60,6 +61,7 @@ int main() {
         pathArrayY[i] = (uY * pathTimeCounter + 0.5 * g * pow(pathTimeCounter, 2)); // writes increments of the y displacement
         pathTimeCounter += (flightTime / pathRes);
     }
+
     for (i = 0; i < pathRes; i++) {printf("%lf, %lf\n", pathArrayX[i], pathArrayY[i]); }
 
     FILE *file = fopen("trajectory.csv", "w");

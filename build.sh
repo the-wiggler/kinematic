@@ -1,4 +1,4 @@
 #!/bin/bash
-gcc main.c -o main -lm
-./main
-rm main
+gcc window.c -o window $(sdl2-config --cflags --libs)
+./window
+rm window
