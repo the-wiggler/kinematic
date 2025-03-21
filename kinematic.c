@@ -60,7 +60,7 @@ void boundsInitialize() {
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -90,10 +90,9 @@ int main() {
 
     for (i = 0; i < path_resolution; i++) { 
         SDL_RenderDrawPoint(renderer, 10 + path_array_x[i], 240 - path_array_y[i]);
-        SDL_RenderPresent(renderer);
         SDL_Delay(50);
+        SDL_RenderPresent(renderer);
     }
-    
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
     
