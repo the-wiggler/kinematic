@@ -9,10 +9,13 @@
 #include <math.h>  
 
 int i;
-// Declare these variables globally
-double initial_velocity, initial_angle, initial_height, initial_x_velocity, initial_y_velocity, flight_time;
+
+double initial_velocity, initial_angle, initial_height, initial_x_velocity, initial_y_velocity, flight_time, max_y_height, max_x_displacement;
 int path_resolution;
+float x_scale, y_scale;
 const double g = -9.8;
+const int window_size_x = 1000;
+const int window_size_y = 800;
 
 // initializes the boundaries of the operation by calculating start/max/min of the projectile
 void boundsInitialize() { 
@@ -34,10 +37,11 @@ void boundsInitialize() {
 
     if (initial_angle == 0) { // if initial angle is 0, assume no initial y component velocity
         flight_time = sqrt(2 * -initial_height / g);
+        max_y_height = initial_height;
         printf("Total flight time: %lf s\n", flight_time);
 
     } else { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
-        double max_y_height = (-pow(initial_y_velocity, 2) / (2 * g) + initial_height); // maximum height reached
+        max_y_height = (-pow(initial_y_velocity, 2) / (2 * g) + initial_height); // maximum height reached
         double max_y_time = -initial_y_velocity / g; // what time it reached max height
         printf("Max height: %lf m | @t = %lf s\n", max_y_height, max_y_time);
 
@@ -46,12 +50,9 @@ void boundsInitialize() {
 
     } 
     
-    double max_x_displacement = initial_x_velocity * flight_time; // total X distance traveled
+    max_x_displacement = initial_x_velocity * flight_time; // total X distance traveled
     printf("Total X distance traveled: %lf m\n", max_x_displacement);
 }
-
-// takes the info from initialization and creates an array that traces the path of the projectile
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //   start of the program                                                                                                 //
@@ -59,7 +60,7 @@ void boundsInitialize() {
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+    SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size_x, window_size_y, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -68,7 +69,9 @@ int main() {
     // run the kinematics calculations
     boundsInitialize(); 
     
+
     //creates the arrays for the projectile's path
+
     path_resolution = 50;
 
     double path_array_x[path_resolution]; // arrays that hold coordinate values for the position of the object in motion
@@ -85,14 +88,33 @@ int main() {
 
     for (i = 0; i < path_resolution; i++) {printf("%lf, %lf\n", path_array_x[i], path_array_y[i]); }
 
+
+    // scales the array to properly fit inside the bounds of the window (does not work lol)
+ 
+    float x_range = max_x_displacement;
+    float y_range = max_y_height + initial_height;
+
+    x_scale = x_range / window_size_x;
+    y_scale = y_range / window_size_y;
+
+    float scale = (x_scale < y_scale) ? x_scale : y_scale;
+
+    for (int i = 0; i < path_resolution; i++) {
+        path_array_x[i] = 10 + (path_array_x[i]) * scale;
+        path_array_y[i] = window_size_y - 50 - (path_array_y[i]) * scale;
+    }
+    for (i = 0; i < path_resolution; i++) {printf("%lf, %lf\n", path_array_x[i], path_array_y[i]); }
+
+
     // Draw points
+
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
     for (i = 0; i < path_resolution; i++) { 
-        SDL_RenderDrawPoint(renderer, 10 + path_array_x[i], 240 - path_array_y[i]);
-        SDL_Delay(50);
-        SDL_RenderPresent(renderer);
+        SDL_Rect pointRect = {10 + path_array_x[i], 500 + -path_array_y[i], 3, 3};
+        SDL_RenderFillRect(renderer, &pointRect);
     }
+    SDL_RenderPresent(renderer);
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
     
