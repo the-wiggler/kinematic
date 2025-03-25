@@ -1,3 +1,1 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\Kinematic.dir/objects.a
-C:\PROGRA~1\MinGW\mingw\mingw64\bin\ar.exe qc CMakeFiles\Kinematic.dir/objects.a @CMakeFiles\Kinematic.dir\objects1.rsp
-C:\PROGRA~1\MinGW\mingw\mingw64\bin\cc.exe -Wl,--whole-archive CMakeFiles\Kinematic.dir/objects.a -Wl,--no-whole-archive -o Kinematic.exe -Wl,--out-implib,libKinematic.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Kinematic.dir\linkLibs.rsp
+/Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/opt/homebrew/lib CMakeFiles/kinematic.dir/src/main.c.o -o kinematic   -L/opt/homebrew/Cellar/sdl2/2.32.2/lib  -Wl,-rpath,/opt/homebrew/Cellar/sdl2/2.32.2/lib /opt/homebrew/Cellar/sdl2/2.32.2/lib/libSDL2.dylib

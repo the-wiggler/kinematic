@@ -1,13 +1,11 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Kinematic.dir/src/main.c.obj"
-  "CMakeFiles/Kinematic.dir/src/main.c.obj.d"
-  "Kinematic.exe"
-  "Kinematic.exe.manifest"
-  "Kinematic.pdb"
-  "libKinematic.dll.a"
+  "CMakeFiles/kinematic.dir/src/main.c.o"
+  "CMakeFiles/kinematic.dir/src/main.c.o.d"
+  "kinematic"
+  "kinematic.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
 foreach(lang C)
-  include(CMakeFiles/Kinematic.dir/cmake_clean_${lang}.cmake OPTIONAL)
+  include(CMakeFiles/kinematic.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()

@@ -1,2 +1,2 @@
-# Empty dependencies file for Kinematic.
+# Empty dependencies file for kinematic.
 # This may be replaced when dependencies are built.
