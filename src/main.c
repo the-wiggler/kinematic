@@ -69,7 +69,6 @@ int main(int argc, char *argv[]) {
     // run the kinematics calculations
     boundsInitialize(); 
     
-
     //creates the arrays for the projectile's path
 
     path_resolution = 150;
