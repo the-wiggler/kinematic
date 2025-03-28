@@ -4,7 +4,7 @@
 # compile C with /Library/Developer/CommandLineTools/usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/opt/homebrew/Cellar/sdl2/2.32.2/include -isystem /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2
+C_INCLUDES = -I/opt/homebrew/Cellar/sdl2/2.32.2/include -I/opt/homebrew/include/SDL2 -I/opt/homebrew/include -I/opt/homebrew/Cellar/harfbuzz/10.4.0_1/include/harfbuzz -I/opt/homebrew/Cellar/glib/2.84.0/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.84.0/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.45/include -I/opt/homebrew/Cellar/graphite2/1.3.14/include -I/opt/homebrew/opt/freetype/include/freetype2 -I/opt/homebrew/opt/libpng/include/libpng16 -isystem /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2
 
 C_FLAGSarm64 =  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk
 

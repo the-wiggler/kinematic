@@ -218,8 +218,16 @@ CMakeFiles/kinematic.dir/src/main.c.o: /Users/java/Documents/kinematic/src/main.
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_version.h \
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_video.h \
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/begin_code.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/close_code.h
+  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/close_code.h \
+  /opt/homebrew/include/SDL2/SDL.h \
+  /opt/homebrew/include/SDL2/SDL_ttf.h \
+  /opt/homebrew/include/SDL2/begin_code.h \
+  /opt/homebrew/include/SDL2/close_code.h
 
+
+/opt/homebrew/include/SDL2/close_code.h:
+
+/opt/homebrew/include/SDL2/begin_code.h:
 
 /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/close_code.h:
 
@@ -317,6 +325,8 @@ CMakeFiles/kinematic.dir/src/main.c.o: /Users/java/Documents/kinematic/src/main.
 
 /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_size_t.h:
 
+/opt/homebrew/include/SDL2/SDL.h:
+
 /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_rsize_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/machine/types.h:
@@ -338,6 +348,8 @@ CMakeFiles/kinematic.dir/src/main.c.o: /Users/java/Documents/kinematic/src/main.
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/arm/_endian.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stdarg_header_macro.h:
+
+/opt/homebrew/include/SDL2/SDL_ttf.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stdarg___va_copy.h:
 

@@ -216,4 +216,7 @@ CMakeFiles/kinematic.dir/src/main.c.o: \
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_version.h \
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_locale.h \
   /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_misc.h \
+  /opt/homebrew/include/SDL2/SDL_ttf.h /opt/homebrew/include/SDL2/SDL.h \
+  /opt/homebrew/include/SDL2/begin_code.h \
+  /opt/homebrew/include/SDL2/close_code.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h

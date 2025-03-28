@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <math.h>  
 
@@ -58,18 +59,40 @@ void boundsInitialize() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int SDL_main(int argc, char *argv[]);
 
+
 int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size_x, window_size_y, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    TTF_Init();
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    
+
+    // Load font
+
+    TTF_Font* arial = TTF_OpenFont("assets/fonts/arial.ttf", 24);
+    if (!arial) {
+        printf("Failed to load font: %s\n", TTF_GetError());
+    }
+
+    // Create text
+
+    SDL_Color white = {255, 255, 255};
+    SDL_Surface* textSurface = TTF_RenderText_Solid(arial, "Hello World!", white);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    // Get text dimensions and position it
+
+    int textWidth, textHeight;
+    SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
+    SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
+
     // run the kinematics calculations
+
     boundsInitialize(); 
     
-    //creates the arrays for the projectile's path
+    // creates the arrays for the projectile's path
 
     path_resolution = 150;
 
@@ -91,13 +114,15 @@ int main(int argc, char *argv[]) {
         float y_scale = (window_size_y / 2) / max_y_height;
         for (i = 0; i < path_resolution; i++) { // scales all y elements in the array
             path_array_y[i] *= y_scale;
+            path_array_y[i] -= 25;
         }
     }
 
     if (max_x_displacement > window_size_x) {
         float x_scale = window_size_x / max_x_displacement;
         for (i = 0; i < path_resolution; i++) { // scales all x elements in the array
-            path_array_x[i] = path_array_x[i] * x_scale;
+            path_array_x[i] *= x_scale;
+            path_array_x[i] -= 25;
         }
     }
 
@@ -119,8 +144,10 @@ int main(int argc, char *argv[]) {
     double max_x = path_array_x[max_index];
     double max_y = path_array_y[max_index];
     SDL_SetRenderDrawColor(renderer, 0, 150, 150, 255);
-    SDL_Rect max_rect = {max_x, -max_y + window_size_y / 2, 5, 5};
+    SDL_Rect max_rect = {max_x, -max_y + window_size_y / 2, 3, 3};
     SDL_RenderFillRect(renderer, &max_rect);
+
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
     free(path_array_x);
     free(path_array_y);
@@ -130,6 +157,10 @@ int main(int argc, char *argv[]) {
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
     
     // Clean up
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(arial);
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
