@@ -12,7 +12,6 @@ int i;
 
 double initial_velocity, initial_angle, initial_height, initial_x_velocity, initial_y_velocity, flight_time, max_y_height, max_x_displacement;
 int path_resolution;
-float x_scale, y_scale;
 const double g = -9.8;
 const int window_size_x = 1000;
 const int window_size_y = 800;
@@ -73,11 +72,11 @@ int main(int argc, char *argv[]) {
 
     //creates the arrays for the projectile's path
 
-    path_resolution = 50;
+    path_resolution = 150;
 
-    double path_array_x[path_resolution]; // arrays that hold coordinate values for the position of the object in motion
+    double *path_array_x = (double*)malloc(path_resolution * sizeof(double)); // arrays that hold coordinate values for the position of the object in motion
         path_array_x[path_resolution - 1] = initial_x_velocity * flight_time; // total X distance traveled
-    double path_array_y[path_resolution]; // these two arrays should always be the same size
+    double *path_array_y = (double*)malloc(path_resolution * sizeof(double)); // these two arrays should always be the same size
         path_array_y[path_resolution - 1] = -initial_height;
 
     double path_counter = 0.0;
@@ -87,34 +86,46 @@ int main(int argc, char *argv[]) {
         path_counter += (flight_time / path_resolution);
     }
 
-    for (i = 0; i < path_resolution; i++) {printf("%lf, %lf\n", path_array_x[i], path_array_y[i]); }
+    // scales the array to properly fit inside the bounds of the window (kind of works lol)
+    
+    if (max_y_height > window_size_y / 2) { 
+        float y_scale = (window_size_y / 2) / max_y_height;
+        for (i = 0; i < path_resolution; i++) { // scales all y elements in the array
+            path_array_y[i] *= y_scale;
+        }
+    }
 
-
-    // scales the array to properly fit inside the bounds of the window (does not work lol)
- 
-    // float x_range = max_x_displacement;
-    // float y_range = max_y_height + initial_height;
-
-    // x_scale = x_range / window_size_x;
-    // y_scale = y_range / window_size_y;
-
-    // float scale = (x_scale < y_scale) ? x_scale : y_scale;
-
-    // for (int i = 0; i < path_resolution; i++) {
-    //     path_array_x[i] = 10 + (path_array_x[i]) * scale;
-    //     path_array_y[i] = window_size_y - 50 - (path_array_y[i]) * scale;
-    // }
-    // for (i = 0; i < path_resolution; i++) {printf("%lf, %lf\n", path_array_x[i], path_array_y[i]); }
-
+    if (max_x_displacement > window_size_x) {
+        float x_scale = window_size_x / max_x_displacement;
+        for (i = 0; i < path_resolution; i++) { // scales all x elements in the array
+            path_array_x[i] = path_array_x[i] * x_scale;
+        }
+    }
 
     // Draw points
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
     for (i = 0; i < path_resolution; i++) { 
-        SDL_Rect pointRect = {10 + path_array_x[i], 500 + -path_array_y[i], 3, 3};
+        SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + window_size_y / 2, 3, 3}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
     }
+
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_Rect end_rect = {path_array_x[path_resolution - 1], -path_array_y[path_resolution - 1] + window_size_y / 2, 5, 5};
+    SDL_RenderFillRect(renderer, &end_rect);
+    
+    int max_index = 0;
+    for (i = 1; i < path_resolution; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } } // index for max points
+    double max_x = path_array_x[max_index];
+    double max_y = path_array_y[max_index];
+    SDL_SetRenderDrawColor(renderer, 0, 150, 150, 255);
+    SDL_Rect max_rect = {max_x, -max_y + window_size_y / 2, 5, 5};
+    SDL_RenderFillRect(renderer, &max_rect);
+
+    free(path_array_x);
+    free(path_array_y);
+
     SDL_RenderPresent(renderer);
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
