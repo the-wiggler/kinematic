@@ -37,15 +37,15 @@ CMakeFiles/kinematic.dir/src/main.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/sys/_types/_ssize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/secure/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/secure/_common.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_main.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_stdinc.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_config.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_platform.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_main.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_stdinc.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_config.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_platform.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/AvailabilityMacros.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/TargetConditionals.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/begin_code.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/close_code.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/begin_code.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/close_code.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/sys/types.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/sys/appleapiopts.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/machine/endian.h \
@@ -137,7 +137,6 @@ CMakeFiles/kinematic.dir/src/main.c.o: \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_rsize_t.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_wchar_t.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_null.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_max_align_t.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stddef_offsetof.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdarg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/__stdarg_header_macro.h \
@@ -171,52 +170,50 @@ CMakeFiles/kinematic.dir/src/main.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/math.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/float.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/float.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_assert.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_atomic.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_audio.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_error.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_endian.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_mutex.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_thread.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_rwops.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_clipboard.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_cpuinfo.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_assert.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_atomic.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_audio.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_error.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_endian.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_mutex.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_thread.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_rwops.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_clipboard.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_cpuinfo.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/arm_neon.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/arm_bf16.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_events.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_video.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_pixels.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_rect.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_surface.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_blendmode.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_keyboard.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_keycode.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_scancode.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_mouse.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_joystick.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_guid.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_gamecontroller.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_sensor.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_quit.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_gesture.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_touch.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_filesystem.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_haptic.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_hidapi.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_hints.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_loadso.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_log.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_messagebox.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_metal.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_power.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_render.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_shape.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_system.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_timer.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_version.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_locale.h \
-  /opt/homebrew/Cellar/sdl2/2.32.2/include/SDL2/SDL_misc.h \
-  /opt/homebrew/include/SDL2/SDL_ttf.h /opt/homebrew/include/SDL2/SDL.h \
-  /opt/homebrew/include/SDL2/begin_code.h \
-  /opt/homebrew/include/SDL2/close_code.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_events.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_video.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_pixels.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_rect.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_surface.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_blendmode.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_keyboard.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_keycode.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_scancode.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_mouse.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_joystick.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_guid.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_gamecontroller.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_sensor.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_quit.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_gesture.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_touch.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_filesystem.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_haptic.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_hidapi.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_hints.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_loadso.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_log.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_messagebox.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_metal.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_power.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_render.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_shape.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_system.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_timer.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_version.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_locale.h \
+  /Users/java/Documents/kinematic/libs/SDL2/include/SDL2/SDL_misc.h \
+  /Users/java/Documents/kinematic/libs/SDL2_ttf/include/SDL2/SDL_ttf.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h

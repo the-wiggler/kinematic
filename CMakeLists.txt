@@ -1,32 +1,31 @@
 cmake_minimum_required(VERSION 3.10)
-project(Kinematic)
+project(KinematicVisualizer C)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_C_STANDARD 99)
 
-find_package(SDL2 REQUIRED)
+# Output binary in a clean place
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(APPLE)
-    include(FindPkgConfig)
-    pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
-    
-    if(NOT SDL2_TTF_INCLUDE_DIRS)
-        execute_process(
-            COMMAND brew --prefix sdl2_ttf
-            OUTPUT_VARIABLE BREW_SDL2_TTF_PREFIX
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        set(SDL2_TTF_INCLUDE_DIRS "${BREW_SDL2_TTF_PREFIX}/include")
-        set(SDL2_TTF_LIBRARIES "${BREW_SDL2_TTF_PREFIX}/lib/libSDL2_ttf.dylib")
-    endif()
-else()
-    find_package(SDL2_ttf REQUIRED)
-endif()
-
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
-
+# Source files
 add_executable(kinematic src/main.c)
-target_link_libraries(kinematic ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
-if(MINGW)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mconsole")
-endif()
+# Include paths for SDL2 and SDL2_ttf (from local folders)
+include_directories(
+    ${PROJECT_SOURCE_DIR}/libs/SDL2/include
+    ${PROJECT_SOURCE_DIR}/libs/SDL2/include/SDL2
+    ${PROJECT_SOURCE_DIR}/libs/SDL2_ttf/include
+    ${PROJECT_SOURCE_DIR}/libs/SDL2_ttf/include/SDL2
+)
+
+
+# Link directories
+link_directories(
+    ${PROJECT_SOURCE_DIR}/libs/SDL2/lib
+    ${PROJECT_SOURCE_DIR}/libs/SDL2_ttf/lib
+)
+
+# Link libraries
+target_link_libraries(kinematic
+    SDL2
+    SDL2_ttf
+)

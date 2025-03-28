@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/kinematic.dir/src/main.c.o"
   "CMakeFiles/kinematic.dir/src/main.c.o.d"
-  "kinematic"
-  "kinematic.pdb"
+  "bin/kinematic"
+  "bin/kinematic.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
