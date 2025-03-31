@@ -15,9 +15,9 @@
 const double g = -9.8;
 double initial_velocity, initial_angle, initial_height, 
 initial_x_velocity, initial_y_velocity, flight_time, 
-max_y_height, max_x_displacement;
+max_y_height, max_x_displacement, impact_point[2];
 
-#define PATH_RESOLUTION 30 // how many points will be plotted for the path
+#define PATH_RESOLUTION 150 // how many points will be plotted for the path
 double *path_array_x; 
 double *path_array_y;
 
@@ -65,19 +65,20 @@ void projectileArrayInitialize() {
         // creates the arrays for the projectile's path
     path_array_x = (double*)malloc(PATH_RESOLUTION * sizeof(double)); // arrays that hold coordinate values for the position of the object in motion
         if (path_array_x == NULL) {printf("ERROR: MEMORY ALLOCATION FAILED FOR 'path_array_x'!\n"); exit(1);}
-        path_array_x[PATH_RESOLUTION] = initial_x_velocity * flight_time; // total X distance traveled
     path_array_y = (double*)malloc(PATH_RESOLUTION * sizeof(double)); // these two arrays should always be the same size
         if (path_array_y == NULL) {printf("ERROR: MEMORY ALLOCATION FAILED FOR 'path_array_y'!\n"); exit(1);}
-        path_array_y[PATH_RESOLUTION] = -initial_height;
 
-    double path_counter = 0.0;
+    float path_counter = 0.0;
     for (int i = 0; i < PATH_RESOLUTION; i++) {
         path_array_x[i] = initial_x_velocity * (path_counter); // writes increments of the x displacement
         path_array_y[i] = (initial_y_velocity * path_counter + 0.5 * g * pow(path_counter, 2)); // writes increments of the y displacement
         path_counter += (flight_time / PATH_RESOLUTION);
-    }
 
-    // scales the array to properly fit inside the bounds of the window (kind of works lol)
+    }
+    impact_point[0] = initial_x_velocity * flight_time;
+    impact_point[1] = -initial_height;
+
+    // scales the arrays to properly fit inside the bounds of the window (kind of works lol)
     if (max_y_height > WINDOW_SIZE_Y / 2) { 
         float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
         for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all y elements in the array
@@ -136,14 +137,11 @@ int main(int argc, char *argv[]) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + WINDOW_SIZE_Y / 2, 2, 2}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
-
-        SDL_RenderPresent(renderer);
-        SDL_Delay(10);
     }
 
     // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {path_array_x[PATH_RESOLUTION], -path_array_y[PATH_RESOLUTION] + WINDOW_SIZE_Y / 2, 5, 5};
+    SDL_Rect end_rect = {impact_point[0], impact_point[1] + WINDOW_SIZE_Y / 2, 5, 5};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached

@@ -45,19 +45,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/bin/cmake.exe
+CMAKE_COMMAND = /opt/homebrew/bin/cmake
 
 # The command to remove a file.
-RM = /usr/bin/cmake.exe -E rm -f
+RM = /opt/homebrew/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /c/Users/java/Documents/kinematic
+CMAKE_SOURCE_DIR = /Users/java/Documents/kinematic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /c/Users/java/Documents/kinematic/build
+CMAKE_BINARY_DIR = /Users/java/Documents/kinematic/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -85,14 +85,14 @@ clean: CMakeFiles/kinematic.dir/clean
 CMakeFiles/kinematic.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kinematic.dir/build.make CMakeFiles/kinematic.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kinematic.dir/build.make CMakeFiles/kinematic.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/c/Users/java/Documents/kinematic/build/CMakeFiles --progress-num=1,2 "Built target kinematic"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/java/Documents/kinematic/build/CMakeFiles --progress-num=1,2 "Built target kinematic"
 .PHONY : CMakeFiles/kinematic.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/kinematic.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /c/Users/java/Documents/kinematic/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/java/Documents/kinematic/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/kinematic.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /c/Users/java/Documents/kinematic/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/java/Documents/kinematic/build/CMakeFiles 0
 .PHONY : CMakeFiles/kinematic.dir/rule
 
 # Convenience name for target.
@@ -102,7 +102,7 @@ kinematic: CMakeFiles/kinematic.dir/rule
 # codegen rule for target.
 CMakeFiles/kinematic.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kinematic.dir/build.make CMakeFiles/kinematic.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/c/Users/java/Documents/kinematic/build/CMakeFiles --progress-num=1,2 "Finished codegen for target kinematic"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/java/Documents/kinematic/build/CMakeFiles --progress-num=1,2 "Finished codegen for target kinematic"
 .PHONY : CMakeFiles/kinematic.dir/codegen
 
 # clean rule for target.
