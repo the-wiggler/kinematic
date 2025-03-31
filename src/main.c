@@ -40,15 +40,16 @@ void boundsInitialize() {
         max_y_height = initial_height;
         printf("Total flight time: %lf s\n", flight_time);
 
-    } else { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
+    } else if (initial_angle >= -90 && initial_angle <= 90 && initial_angle != 0) { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
         max_y_height = (-pow(initial_y_velocity, 2) / (2 * g) + initial_height); // maximum height reached
         double max_y_time = -initial_y_velocity / g; // what time it reached max height
         printf("Max height: %lf m | @t = %lf s\n", max_y_height, max_y_time);
 
         flight_time = (-initial_y_velocity - sqrt(pow(initial_y_velocity, 2) + 2 * g * -initial_height)) / g; // total flight time
         printf("Total flight time: %lf s\n", flight_time);
-
-    } 
+    }  else {
+        printf("ERROR: INPUT ANGLE OUT OF ACCEPTABLE BOUNDS\n");
+    }
     
     max_x_displacement = initial_x_velocity * flight_time; // total X distance traveled
     printf("Total X distance traveled: %lf m\n", max_x_displacement);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
 
     // Load font
 
-    TTF_Font* arial = TTF_OpenFont("./assets/arial.ttf", 24);
+    TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 24);
     if (!arial) {
         printf("Failed to load font: %s\n", TTF_GetError());
     }
