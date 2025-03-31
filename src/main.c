@@ -17,19 +17,16 @@ double initial_velocity, initial_angle, initial_height,
 initial_x_velocity, initial_y_velocity, flight_time, 
 max_y_height, max_x_displacement, impact_point[2];
 
-#define PATH_RESOLUTION 150 // how many points will be plotted for the path
+#define PATH_RESOLUTION 400 // how many points will be plotted for the path
 double *path_array_x; 
 double *path_array_y;
 
 // initializes the boundaries of the operation by calculating start/max/min of the projectile
-void boundsInitialize() { 
-    
-    printf("Initial Velocity: ");
-        scanf("%lf", &initial_velocity);
-    printf("Intial Angle: ");
-        scanf("%lf", &initial_angle);
-    printf("Initial Height: ");
-        scanf("%lf", &initial_height);
+void boundsInitialize() {
+
+    initial_velocity = 300;
+    initial_angle = 70;
+    initial_height = 0;
 
     double initial_angle_rad = initial_angle * (M_PI / 180.0);
     
@@ -79,7 +76,7 @@ void projectileArrayInitialize() {
     impact_point[1] = initial_height;
 
     // scales the arrays to properly fit inside the bounds of the window (kind of works lol)
-    if (max_y_height > WINDOW_SIZE_Y / 2) { 
+    if (max_y_height > WINDOW_SIZE_Y / 2 || max_y_height < WINDOW_SIZE_Y / 2) { 
         float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
         for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all y elements in the array
             path_array_y[i] *= y_scale;
@@ -94,7 +91,7 @@ void projectileArrayInitialize() {
             path_array_x[i] *= x_scale;
         }
         impact_point[0] *= x_scale;
-    }
+    } 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,15 +126,39 @@ int main(int argc, char *argv[]) {
     boundsInitialize(); 
     projectileArrayInitialize();
 
-    // maps the points for the projectile on the screen
-    for (int i = 0; i < PATH_RESOLUTION; i++) { 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // creates a texture that that points can be rendered on
+    SDL_Texture* pathTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
+    SDL_SetRenderTarget(renderer, pathTexture);
+
+    // maps the points for the projectile on the screen
+    for (int i = 0; i < PATH_RESOLUTION; i++) {
+        SDL_RenderClear(renderer);
+
+        // renders the rectangles to pathTexture
+        SDL_SetRenderTarget(renderer, pathTexture);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + WINDOW_SIZE_Y / 2, 1, 1}; // you need the negative in front of path array since there's a stupid coordinate system
+        SDL_RenderFillRect(renderer, &pointRect);
+
+        // resets the renderer to display to the window
+        SDL_SetRenderTarget(renderer, NULL);
+
+        // displays pathTexture
+        SDL_RenderCopy(renderer, pathTexture, NULL, NULL);
+
+        // displays textTexture
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + WINDOW_SIZE_Y / 2, 2, 2}; // you need the negative in front of path array since there's a stupid coordinate system
-        SDL_RenderFillRect(renderer, &pointRect);
+        // displays a leading rectangle that acts as the "projectile"
+        if (i < PATH_RESOLUTION - 1) {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+            SDL_Rect leadingPointRect = {path_array_x[i], -path_array_y[i] + WINDOW_SIZE_Y / 2, 3, 3};
+            SDL_RenderFillRect(renderer, &leadingPointRect);
+        }
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(1);
     }
 
     // the impact point
@@ -150,8 +171,8 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < PATH_RESOLUTION; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } }
     double max_x = path_array_x[max_index];
     double max_y = path_array_y[max_index];
-    SDL_SetRenderDrawColor(renderer, 0, 150, 150, 255);
-    SDL_Rect max_rect = {max_x, -max_y + WINDOW_SIZE_Y / 2, 3, 3};
+    SDL_SetRenderDrawColor(renderer, 255, 204, 0, 255);
+    SDL_Rect max_rect = {max_x, -max_y + WINDOW_SIZE_Y / 2, 3, -3};
     SDL_RenderFillRect(renderer, &max_rect);
 
     SDL_RenderPresent(renderer);
@@ -164,6 +185,7 @@ int main(int argc, char *argv[]) {
     // Clean up
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+    SDL_DestroyTexture(pathTexture);
     TTF_CloseFont(arial);
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
