@@ -83,16 +83,17 @@ void projectileArrayInitialize() {
         float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
         for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all y elements in the array
             path_array_y[i] *= y_scale;
-            path_array_y[i] -= 25;
+            // path_array_y[i] -= 25;
         }
+        impact_point[1] *= y_scale;
     }
 
     if (max_x_displacement > WINDOW_SIZE_X) {
         float x_scale = WINDOW_SIZE_X / max_x_displacement;
         for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all x elements in the array
             path_array_x[i] *= x_scale;
-            path_array_x[i] -= 25;
         }
+        impact_point[0] *= x_scale;
     }
 }
 
