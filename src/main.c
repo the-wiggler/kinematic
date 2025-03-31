@@ -76,7 +76,7 @@ void projectileArrayInitialize() {
 
     }
     impact_point[0] = initial_x_velocity * flight_time;
-    impact_point[1] = -initial_height;
+    impact_point[1] = initial_height;
 
     // scales the arrays to properly fit inside the bounds of the window (kind of works lol)
     if (max_y_height > WINDOW_SIZE_Y / 2) { 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
 
     // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {impact_point[0], impact_point[1] + WINDOW_SIZE_Y / 2, 5, 5};
+    SDL_Rect end_rect = {impact_point[0], impact_point[1] + WINDOW_SIZE_Y / 2, 3, 3};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached
