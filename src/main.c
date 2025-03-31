@@ -71,14 +71,10 @@ int main(int argc, char *argv[]) {
     SDL_RenderClear(renderer);
 
     // Load font
-
     TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 24);
-    if (!arial) {
-        printf("Failed to load font: %s\n", TTF_GetError());
-    }
+    (!arial) ? printf("Failed to load font: %s\n", TTF_GetError()) : (void)0;
 
     // Create text
-
     SDL_Color white = {255, 255, 255};
     SDL_Surface* textSurface = TTF_RenderText_Solid(arial, "Hello World!", white);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -90,13 +86,10 @@ int main(int argc, char *argv[]) {
     SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
 
     // run the kinematics calculations
-
     boundsInitialize(); 
     
     // creates the arrays for the projectile's path
-
     path_resolution = 150;
-
     double *path_array_x = (double*)malloc(path_resolution * sizeof(double)); // arrays that hold coordinate values for the position of the object in motion
         path_array_x[path_resolution - 1] = initial_x_velocity * flight_time; // total X distance traveled
     double *path_array_y = (double*)malloc(path_resolution * sizeof(double)); // these two arrays should always be the same size
@@ -110,7 +103,6 @@ int main(int argc, char *argv[]) {
     }
 
     // scales the array to properly fit inside the bounds of the window (kind of works lol)
-    
     if (max_y_height > window_size_y / 2) { 
         float y_scale = (window_size_y / 2) / max_y_height;
         for (i = 0; i < path_resolution; i++) { // scales all y elements in the array
@@ -128,20 +120,22 @@ int main(int argc, char *argv[]) {
     }
 
     // Draw points
-
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
+    // maps the points for the projectile on the screen
     for (i = 0; i < path_resolution; i++) { 
         SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + window_size_y / 2, 3, 3}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
     }
 
+    // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_Rect end_rect = {path_array_x[path_resolution - 1], -path_array_y[path_resolution - 1] + window_size_y / 2, 5, 5};
     SDL_RenderFillRect(renderer, &end_rect);
     
+    // the max height reached
     int max_index = 0;
-    for (i = 1; i < path_resolution; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } } // index for max points
+    for (i = 1; i < path_resolution; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } }
     double max_x = path_array_x[max_index];
     double max_y = path_array_y[max_index];
     SDL_SetRenderDrawColor(renderer, 0, 150, 150, 255);
