@@ -9,13 +9,17 @@
 #include <stdbool.h>
 #include <math.h>  
 
-int i;
+#define WINDOW_SIZE_X 1000
+#define WINDOW_SIZE_Y 800
 
-double initial_velocity, initial_angle, initial_height, initial_x_velocity, initial_y_velocity, flight_time, max_y_height, max_x_displacement;
-int path_resolution;
 const double g = -9.8;
-const int window_size_x = 1000;
-const int window_size_y = 800;
+double initial_velocity, initial_angle, initial_height, 
+initial_x_velocity, initial_y_velocity, flight_time, 
+max_y_height, max_x_displacement;
+
+#define PATH_RESOLUTION 30 // how many points will be plotted for the path
+double *path_array_x; 
+double *path_array_y;
 
 // initializes the boundaries of the operation by calculating start/max/min of the projectile
 void boundsInitialize() { 
@@ -38,32 +42,66 @@ void boundsInitialize() {
     if (initial_angle == 0) { // if initial angle is 0, assume no initial y component velocity
         flight_time = sqrt(2 * -initial_height / g);
         max_y_height = initial_height;
-        printf("Total flight time: %lf s\n", flight_time);
 
     } else if (initial_angle >= -90 && initial_angle <= 90 && initial_angle != 0) { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
         max_y_height = (-pow(initial_y_velocity, 2) / (2 * g) + initial_height); // maximum height reached
         double max_y_time = -initial_y_velocity / g; // what time it reached max height
-        printf("Max height: %lf m | @t = %lf s\n", max_y_height, max_y_time);
 
         flight_time = (-initial_y_velocity - sqrt(pow(initial_y_velocity, 2) + 2 * g * -initial_height)) / g; // total flight time
-        printf("Total flight time: %lf s\n", flight_time);
+
+        printf("Max height: %lf m | @t = %lf s\n", max_y_height, max_y_time);
+
     }  else {
         printf("ERROR: INPUT ANGLE OUT OF ACCEPTABLE BOUNDS\n");
+        exit(EXIT_SUCCESS);
     }
     
     max_x_displacement = initial_x_velocity * flight_time; // total X distance traveled
+    printf("Total flight time: %lf s\n", flight_time);
     printf("Total X distance traveled: %lf m\n", max_x_displacement);
+}
+
+void projectileArrayInitialize() {
+        // creates the arrays for the projectile's path
+    path_array_x = (double*)malloc(PATH_RESOLUTION * sizeof(double)); // arrays that hold coordinate values for the position of the object in motion
+        if (path_array_x == NULL) {printf("ERROR: MEMORY ALLOCATION FAILED FOR 'path_array_x'!\n"); exit(1);}
+        path_array_x[PATH_RESOLUTION] = initial_x_velocity * flight_time; // total X distance traveled
+    path_array_y = (double*)malloc(PATH_RESOLUTION * sizeof(double)); // these two arrays should always be the same size
+        if (path_array_y == NULL) {printf("ERROR: MEMORY ALLOCATION FAILED FOR 'path_array_y'!\n"); exit(1);}
+        path_array_y[PATH_RESOLUTION] = -initial_height;
+
+    double path_counter = 0.0;
+    for (int i = 0; i < PATH_RESOLUTION; i++) {
+        path_array_x[i] = initial_x_velocity * (path_counter); // writes increments of the x displacement
+        path_array_y[i] = (initial_y_velocity * path_counter + 0.5 * g * pow(path_counter, 2)); // writes increments of the y displacement
+        path_counter += (flight_time / PATH_RESOLUTION);
+    }
+
+    // scales the array to properly fit inside the bounds of the window (kind of works lol)
+    if (max_y_height > WINDOW_SIZE_Y / 2) { 
+        float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
+        for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all y elements in the array
+            path_array_y[i] *= y_scale;
+            path_array_y[i] -= 25;
+        }
+    }
+
+    if (max_x_displacement > WINDOW_SIZE_X) {
+        float x_scale = WINDOW_SIZE_X / max_x_displacement;
+        for (int i = 0; i < PATH_RESOLUTION; i++) { // scales all x elements in the array
+            path_array_x[i] *= x_scale;
+            path_array_x[i] -= 25;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //   start of the program                                                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int SDL_main(int argc, char *argv[]);
-
 
 int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size_x, window_size_y, 0);
+    SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     TTF_Init();
     
@@ -72,11 +110,11 @@ int main(int argc, char *argv[]) {
 
     // Load font
     TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 24);
-    (!arial) ? printf("Failed to load font: %s\n", TTF_GetError()) : (void)0;
+    if (!arial) printf("Failed to load font: %s\n", TTF_GetError());
 
     // Create text
     SDL_Color white = {255, 255, 255};
-    SDL_Surface* textSurface = TTF_RenderText_Solid(arial, "Hello World!", white);
+    SDL_Surface* textSurface = TTF_RenderText_Solid(arial, "KINEMATIC!", white);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
     // Get text dimensions and position it
@@ -85,69 +123,42 @@ int main(int argc, char *argv[]) {
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
     SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
 
-    // run the kinematics calculations
+    // run the calculations
     boundsInitialize(); 
-    
-    // creates the arrays for the projectile's path
-    path_resolution = 150;
-    double *path_array_x = (double*)malloc(path_resolution * sizeof(double)); // arrays that hold coordinate values for the position of the object in motion
-        path_array_x[path_resolution - 1] = initial_x_velocity * flight_time; // total X distance traveled
-    double *path_array_y = (double*)malloc(path_resolution * sizeof(double)); // these two arrays should always be the same size
-        path_array_y[path_resolution - 1] = -initial_height;
-
-    double path_counter = 0.0;
-    for (i = 0; i < path_resolution - 1; i++) {
-        path_array_x[i] = initial_x_velocity * (path_counter); // writes increments of the x displacement
-        path_array_y[i] = (initial_y_velocity * path_counter + 0.5 * g * pow(path_counter, 2)); // writes increments of the y displacement
-        path_counter += (flight_time / path_resolution);
-    }
-
-    // scales the array to properly fit inside the bounds of the window (kind of works lol)
-    if (max_y_height > window_size_y / 2) { 
-        float y_scale = (window_size_y / 2) / max_y_height;
-        for (i = 0; i < path_resolution; i++) { // scales all y elements in the array
-            path_array_y[i] *= y_scale;
-            path_array_y[i] -= 25;
-        }
-    }
-
-    if (max_x_displacement > window_size_x) {
-        float x_scale = window_size_x / max_x_displacement;
-        for (i = 0; i < path_resolution; i++) { // scales all x elements in the array
-            path_array_x[i] *= x_scale;
-            path_array_x[i] -= 25;
-        }
-    }
-
-    // Draw points
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    projectileArrayInitialize();
 
     // maps the points for the projectile on the screen
-    for (i = 0; i < path_resolution; i++) { 
-        SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + window_size_y / 2, 3, 3}; // you need the negative in front of path array since there's a stupid coordinate system
+    for (int i = 0; i < PATH_RESOLUTION; i++) { 
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_Rect pointRect = {path_array_x[i], -path_array_y[i] + WINDOW_SIZE_Y / 2, 2, 2}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(10);
     }
 
     // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {path_array_x[path_resolution - 1], -path_array_y[path_resolution - 1] + window_size_y / 2, 5, 5};
+    SDL_Rect end_rect = {path_array_x[PATH_RESOLUTION], -path_array_y[PATH_RESOLUTION] + WINDOW_SIZE_Y / 2, 5, 5};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached
     int max_index = 0;
-    for (i = 1; i < path_resolution; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } }
+    for (int i = 1; i < PATH_RESOLUTION; i++) { if (path_array_y[i] > path_array_y[max_index]) { max_index = i; } }
     double max_x = path_array_x[max_index];
     double max_y = path_array_y[max_index];
     SDL_SetRenderDrawColor(renderer, 0, 150, 150, 255);
-    SDL_Rect max_rect = {max_x, -max_y + window_size_y / 2, 3, 3};
+    SDL_Rect max_rect = {max_x, -max_y + WINDOW_SIZE_Y / 2, 3, 3};
     SDL_RenderFillRect(renderer, &max_rect);
 
-    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_RenderPresent(renderer);
 
     free(path_array_x);
     free(path_array_y);
-
-    SDL_RenderPresent(renderer);
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
     
@@ -162,5 +173,3 @@ int main(int argc, char *argv[]) {
     
     return 0;
 }
-
-
