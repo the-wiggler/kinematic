@@ -20,8 +20,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/libs/SDL2_ttf/include/SDL2
 )
 
-# OS-specific settings
-if(WIN32)
+if(WIN32 OR MSYS)
     message(STATUS "Configuring for Windows")
 
     link_directories(
@@ -50,3 +49,4 @@ elseif(APPLE)
     )
 
 endif()
+

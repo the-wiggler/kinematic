@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/java/Documents/kinematic/src/main.c" "CMakeFiles/kinematic.dir/src/main.c.o" "gcc" "CMakeFiles/kinematic.dir/src/main.c.o.d"
+  "/c/Users/java/Documents/kinematic/src/main.c" "CMakeFiles/kinematic.dir/src/main.c.o" "gcc" "CMakeFiles/kinematic.dir/src/main.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

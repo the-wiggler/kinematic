@@ -1,8 +1,9 @@
 file(REMOVE_RECURSE
-  "/Users/java/Documents/kinematic/bin/kinematic"
-  "/Users/java/Documents/kinematic/bin/kinematic.pdb"
+  "/c/Users/java/Documents/kinematic/bin/kinematic.exe"
+  "/c/Users/java/Documents/kinematic/bin/kinematic.pdb"
   "CMakeFiles/kinematic.dir/src/main.c.o"
   "CMakeFiles/kinematic.dir/src/main.c.o.d"
+  "libkinematic.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.
