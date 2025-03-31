@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
     // Load font
 
-    TTF_Font* arial = TTF_OpenFont("assets/fonts/arial.ttf", 24);
+    TTF_Font* arial = TTF_OpenFont("./assets/arial.ttf", 24);
     if (!arial) {
         printf("Failed to load font: %s\n", TTF_GetError());
     }
