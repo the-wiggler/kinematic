@@ -1,1 +1,0 @@
-/usr/bin/cc.exe -Wl,--enable-auto-import CMakeFiles/kinematic.dir/src/main.c.o -o /c/Users/java/Documents/kinematic/bin/kinematic.exe -Wl,--out-implib,libkinematic.dll.a -Wl,--major-image-version,0,--minor-image-version,0  /c/Users/java/Documents/kinematic/libs/SDL2/lib/libSDL2.dll.a /c/Users/java/Documents/kinematic/libs/SDL2_ttf/lib/libSDL2_ttf.dll.a

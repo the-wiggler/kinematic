@@ -1,3 +1,0 @@
-/c/Users/java/Documents/kinematic/build/CMakeFiles/kinematic.dir
-/c/Users/java/Documents/kinematic/build/CMakeFiles/edit_cache.dir
-/c/Users/java/Documents/kinematic/build/CMakeFiles/rebuild_cache.dir
