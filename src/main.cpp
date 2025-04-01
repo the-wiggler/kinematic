@@ -11,10 +11,10 @@
 
 #define WINDOW_SIZE_X 1000
 #define WINDOW_SIZE_Y 800
-#define PATH_RESOLUTION 20
+#define PATH_RESOLUTION 200
 
-double initial_velocity = 45;
-double initial_angle = 45;
+double initial_velocity = 80;
+double initial_angle = 60;
 double initial_height = 45;
 
 
@@ -103,7 +103,6 @@ class InitializePath {
                 impact_point[0] *= x_scale;
             } 
         }
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,16 +119,16 @@ int main(int argc, char *argv[]) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Load font
+    // load font
     TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 24);
     if (!arial) printf("Failed to load font: %s\n", TTF_GetError());
 
-    // Create text
+    // create text
     SDL_Color white = {255, 255, 255};
     SDL_Surface* textSurface = TTF_RenderText_Solid(arial, "KINEMATIC!", white);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
-    // Get text dimensions and position it
+    // get text dimensions and position it
 
     int textWidth, textHeight;
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
@@ -139,6 +138,7 @@ int main(int argc, char *argv[]) {
     InitializePath pathMain;
     pathMain.boundsInitialize();
     pathMain.projectileArrayInitialize();
+    pathMain.projectileArrayScale();
     for (int i = 0; i < PATH_RESOLUTION; i++) {std::cout << "[" << i << "] " << pathMain.path_array_x[i] << std::endl;}
 
     // creates a texture that that points can be rendered on
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
         // renders the rectangles to pathTexture
         SDL_SetRenderTarget(renderer, pathTexture);
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_Rect pointRect = {pathMain.path_array_x[i], -pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2, 1, 1}; // you need the negative in front of path array since there's a stupid coordinate system
+        SDL_Rect pointRect = {static_cast<int>(pathMain.path_array_x[i]), static_cast<int>(-pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2), 1, 1}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
 
         // resets the renderer to display to the window
@@ -168,12 +168,12 @@ int main(int argc, char *argv[]) {
         // displays a leading rectangle that acts as the "projectile"
         if (i < PATH_RESOLUTION - 1) {
             SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-            SDL_Rect leadingPointRect = {pathMain.path_array_x[i], -pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2, 3, 3};
+            SDL_Rect leadingPointRect = {static_cast<int>(pathMain.path_array_x[i]), static_cast<int>(-pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2), 3, 3};
             SDL_RenderFillRect(renderer, &leadingPointRect);
         }
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1);
+        SDL_Delay(5);
     }
 
     SDL_RenderClear(renderer);
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
 
     // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {pathMain.impact_point[0], pathMain.impact_point[1] + WINDOW_SIZE_Y / 2, 3, 3};
+    SDL_Rect end_rect = {static_cast<int>(pathMain.impact_point[0]), static_cast<int>(pathMain.impact_point[1] + WINDOW_SIZE_Y / 2), 3, 3};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached
@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
     double max_x = pathMain.path_array_x[max_index];
     double max_y = pathMain.path_array_y[max_index];
     SDL_SetRenderDrawColor(renderer, 255, 204, 0, 255);
-    SDL_Rect max_rect = {max_x, -max_y + WINDOW_SIZE_Y / 2, 3, -3};
+    SDL_Rect max_rect = {static_cast<int>(max_x), static_cast<int>(-max_y + WINDOW_SIZE_Y / 2), 3, -3};
     SDL_RenderFillRect(renderer, &max_rect);
 
     // resets the renderer to display to the window
@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
 
-    // Clean up
+    // clean up
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
     SDL_DestroyTexture(pathTexture);
