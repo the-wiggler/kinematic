@@ -100,10 +100,6 @@ void projectileArrayInitialize() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
-    bool program_running = true;
-
-    // while loop that contains the whols program
-    while (program_running) {
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
@@ -197,8 +193,6 @@ int main(int argc, char *argv[]) {
 
     free(path_array_x);
     free(path_array_y);
-
-    printf("Input Command - ('h' for help):");
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
 
@@ -211,6 +205,5 @@ int main(int argc, char *argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    }
     return 0;
 }
