@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
+#include <string.h>
 #include <math.h>  
 
 #define WINDOW_SIZE_X 1000
@@ -99,6 +100,11 @@ void projectileArrayInitialize() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
+    bool program_running = true;
+
+    // while loop that contains the whols program
+    while (program_running) {
+
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -161,6 +167,9 @@ int main(int argc, char *argv[]) {
         SDL_Delay(1);
     }
 
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, pathTexture);
+
     // the impact point
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_Rect end_rect = {impact_point[0], impact_point[1] + WINDOW_SIZE_Y / 2, 3, 3};
@@ -175,13 +184,24 @@ int main(int argc, char *argv[]) {
     SDL_Rect max_rect = {max_x, -max_y + WINDOW_SIZE_Y / 2, 3, -3};
     SDL_RenderFillRect(renderer, &max_rect);
 
+    // resets the renderer to display to the window
+    SDL_SetRenderTarget(renderer, NULL);
+
+    // displays pathTexture
+    SDL_RenderCopy(renderer, pathTexture, NULL, NULL);
+
+    // displays textTexture
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+   
     SDL_RenderPresent(renderer);
 
     free(path_array_x);
     free(path_array_y);
+
+    printf("Input Command - ('h' for help):");
     
     SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
-    
+
     // Clean up
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -191,6 +211,6 @@ int main(int argc, char *argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    
+    }
     return 0;
 }
