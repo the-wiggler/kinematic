@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
-project(KinematicVisualizer C)
+project(KinematicVisualizer CXX)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 11)
 
 # Output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Source files
-add_executable(kinematic src/main.c)
+add_executable(kinematic src/main.cpp)
 
 # Don't use SDL_main
 add_definitions(-DSDL_MAIN_HANDLED)
@@ -49,4 +49,3 @@ elseif(APPLE)
     )
 
 endif()
-
