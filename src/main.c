@@ -25,7 +25,7 @@ double *path_array_y;
 // initializes the boundaries of the operation by calculating start/max/min of the projectile
 void boundsInitialize() {
 
-    initial_velocity = 300;
+      initial_velocity = 300;
     initial_angle = 70;
     initial_height = 0;
 
