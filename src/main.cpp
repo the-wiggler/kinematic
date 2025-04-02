@@ -13,8 +13,8 @@
 #define WINDOW_SIZE_Y 800
 #define PATH_RESOLUTION 200
 
-double initial_velocity = 80;
-double initial_angle = 60;
+double initial_velocity = 800;
+double initial_angle = 30;
 double initial_height = 45;
 
 
@@ -27,7 +27,6 @@ class InitializePath {
     public: 
         std::vector<double> path_array_x;
         std::vector<double> path_array_y;
-        double impact_point[2];
 
         void boundsInitialize() {
 
@@ -76,32 +75,26 @@ class InitializePath {
 
             }
 
-
-            // the points of impact are a separate array, this should eventually be removed and just added onto the end of the path array
-            impact_point[0] = initial_x_velocity * flight_time;
-            impact_point[1] = initial_height;
+            path_array_x.push_back(initial_x_velocity * flight_time);
+            path_array_y.push_back(initial_height);
         }
 
+        // scales each path array so that it fits inside the screen (retains aspect ratio)
         void projectileArrayScale() {
-            // scales the arrays to properly fit inside the bounds of the window (kind of works lol)
-            if (max_y_height > WINDOW_SIZE_Y / 2 || max_y_height < WINDOW_SIZE_Y / 2) { 
+            if (max_x_displacement > WINDOW_SIZE_X || max_y_height > WINDOW_SIZE_Y) {
+                float x_scale = WINDOW_SIZE_X / max_x_displacement * 0.98;
                 float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
-                // scales all y elements in the array
-                for (int i = 0; i < PATH_RESOLUTION; i++) {
-                    path_array_y[i] *= y_scale;
-                    // path_array_y[i] -= 25;
-                }
-                impact_point[1] *= y_scale;
-            }
 
-            if (max_x_displacement > WINDOW_SIZE_X) {
-                float x_scale = WINDOW_SIZE_X / max_x_displacement;
-                // scales all x elements in the array
+                float path_scale_factor = std::min(x_scale, y_scale);
+
                 for (int i = 0; i < PATH_RESOLUTION; i++) {
-                    path_array_x[i] *= x_scale;
+                    path_array_x[i] *= path_scale_factor;
+                    path_array_y[i] *= path_scale_factor;
                 }
-                impact_point[0] *= x_scale;
-            } 
+
+                path_array_x[path_array_x.size() - 1] *= path_scale_factor;
+                path_array_y[path_array_y.size() - 1] *= path_scale_factor;
+            }
         }
 };
 
@@ -134,7 +127,7 @@ int main(int argc, char *argv[]) {
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
     SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
 
-    // run the calculations
+    // RUNS THE CALCULATIONS --> IMPORTANT
     InitializePath pathMain;
     pathMain.boundsInitialize();
     pathMain.projectileArrayInitialize();
@@ -159,7 +152,7 @@ int main(int argc, char *argv[]) {
         // resets the renderer to display to the window
         SDL_SetRenderTarget(renderer, NULL);
 
-        // displays pathTexturewwwwwwwwwwwwwwwwwwwwwwwwwwww
+        // displays pathTexture
         SDL_RenderCopy(renderer, pathTexture, NULL, NULL);
 
         // displays textTexture
@@ -179,9 +172,9 @@ int main(int argc, char *argv[]) {
     SDL_RenderClear(renderer);
     SDL_SetRenderTarget(renderer, pathTexture);
 
-    // the impact point
+    // the impact point (assumes the final element of path_array is the ending - it should be because of the element that was added in projectileScaleArray)
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {static_cast<int>(pathMain.impact_point[0]), static_cast<int>(pathMain.impact_point[1] + WINDOW_SIZE_Y / 2), 3, 3};
+    SDL_Rect end_rect = {static_cast<int>(pathMain.path_array_x[PATH_RESOLUTION]), static_cast<int>(pathMain.path_array_y[PATH_RESOLUTION] + WINDOW_SIZE_Y / 2), 3, 3};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached
@@ -204,7 +197,8 @@ int main(int argc, char *argv[]) {
    
     SDL_RenderPresent(renderer);
     
-    SDL_Event e; bool quit = false; while(quit == false){ while(SDL_PollEvent(&e)){ if(e.type == SDL_QUIT) quit = true; } } // thing that holds the window open. Credit: Lazy Foo' Productions
+    // keeps window open
+    SDL_Event e; bool quit = false; while (!quit) {if (SDL_WaitEvent(&e)) {if (e.type == SDL_QUIT) quit = true;}}
 
     // clean up
     SDL_FreeSurface(textSurface);
