@@ -12,6 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[]) {
+    bool running = true;
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* window = SDL_CreateWindow("KINEMATIC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
@@ -106,8 +107,11 @@ int main(int argc, char *argv[]) {
    
     SDL_RenderPresent(renderer);
     
+    
+
     // keeps window open
-    SDL_Event e; bool quit = false; while (!quit) {if (SDL_WaitEvent(&e)) {if (e.type == SDL_QUIT) quit = true;}}
+    SDL_Event e; bool quit = false; 
+    while (!quit) {if (SDL_WaitEvent(&e)) {if (e.type == SDL_QUIT) quit = true;}}
 
     // clean up
     SDL_FreeSurface(textSurface);
