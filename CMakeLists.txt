@@ -7,13 +7,16 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Source files
-add_executable(kinematic src/main.cpp)
+add_executable(kinematic src/main.cpp
+               src/InitializePath.cpp
+    )
 
 # Don't use SDL_main
 add_definitions(-DSDL_MAIN_HANDLED)
 
 # Include paths (common)
 include_directories(
+    ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/libs/SDL2/include
     ${PROJECT_SOURCE_DIR}/libs/SDL2/include/SDL2
     ${PROJECT_SOURCE_DIR}/libs/SDL2_ttf/include

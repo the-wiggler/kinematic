@@ -5,98 +5,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <cmath>
-#include <cstring>
-#include <vector>
-
-#define WINDOW_SIZE_X 1000
-#define WINDOW_SIZE_Y 800
-#define PATH_RESOLUTION 200
-
-double initial_velocity = 800;
-double initial_angle = 30;
-double initial_height = 45;
-
-
-class InitializePath {
-    private:
-        double initial_x_velocity, initial_y_velocity, flight_time, 
-        max_y_height, max_x_displacement;
-        double g = -9.8;
-
-    public: 
-        std::vector<double> path_array_x;
-        std::vector<double> path_array_y;
-
-        void boundsInitialize() {
-
-            double initial_angle_rad = initial_angle * (M_PI / 180.0);
-            
-            initial_x_velocity = initial_velocity * cos(initial_angle_rad); // initial x component of velocity
-            initial_y_velocity = initial_velocity * sin(initial_angle_rad); // initial y component of velocity
-
-            std::cout << "initial_x_velocity: " << initial_x_velocity << std::endl;
-            std::cout << "initial_y_velocity: " << initial_y_velocity << std::endl;
-
-            if (initial_angle == 0) { // if initial angle is 0, assume no initial y component velocity
-                flight_time = sqrt(2 * -initial_height / g);
-                max_y_height = initial_height;
-
-            } else if (initial_angle >= -90 && initial_angle <= 90 && initial_angle != 0) { // if initial angle is either > or < 0, assume initial y component is positive or negative respectively
-                max_y_height = (-pow(initial_y_velocity, 2) / (2 * g) + initial_height); // maximum height reached
-                double max_y_time = -initial_y_velocity / g; // what time it reached max height
-
-                flight_time = (-initial_y_velocity - sqrt(pow(initial_y_velocity, 2) + 2 * g * -initial_height)) / g; // total flight time
-
-                std::cout << "Max height: " << max_y_height << "m | @t = " << max_y_time << std::endl;
-
-            }  else {
-                std::cout << "ERROR: INPUT ANGLE OUT OF ACCEPTABLE BOUNDS" << std::endl;
-                exit(EXIT_FAILURE);
-            }
-            
-            max_x_displacement = initial_x_velocity * flight_time; // total X distance traveled
-            std::cout << "Total flight time: " << flight_time << std::endl;
-            std::cout << "Total X distance traveled: " << max_x_displacement << std::endl;
-        }
-
-        void projectileArrayInitialize() {
-            // resizes the arrays to match the proper resolution for its path
-            path_array_x.resize(PATH_RESOLUTION);
-            path_array_y.resize(PATH_RESOLUTION);
-            if(path_array_x.size() != path_array_y.size()) {std::cout << "ERROR: PATH ARRAY SIZE MISMATCHED" << std::endl;}
-
-            // performs kinematic calculations based on previous data that maps each point. Works as a coordinate system
-            float path_counter = 0.0;
-            for (int i = 0; i < PATH_RESOLUTION; i++) {
-                path_array_x[i] = initial_x_velocity * (path_counter); // writes increments of the x displacement
-                path_array_y[i] = (initial_y_velocity * path_counter + 0.5 * g * pow(path_counter, 2)); // writes increments of the y displacement
-                path_counter += (flight_time / PATH_RESOLUTION);
-
-            }
-
-            path_array_x.push_back(initial_x_velocity * flight_time);
-            path_array_y.push_back(initial_height);
-        }
-
-        // scales each path array so that it fits inside the screen (retains aspect ratio)
-        void projectileArrayScale() {
-            if (max_x_displacement > WINDOW_SIZE_X || max_y_height > WINDOW_SIZE_Y) {
-                float x_scale = WINDOW_SIZE_X / max_x_displacement * 0.98;
-                float y_scale = (WINDOW_SIZE_Y / 2) / max_y_height;
-
-                float path_scale_factor = std::min(x_scale, y_scale);
-
-                for (int i = 0; i < PATH_RESOLUTION; i++) {
-                    path_array_x[i] *= path_scale_factor;
-                    path_array_y[i] *= path_scale_factor;
-                }
-
-                path_array_x[path_array_x.size() - 1] *= path_scale_factor;
-                path_array_y[path_array_y.size() - 1] *= path_scale_factor;
-            }
-        }
-};
+#include "InitializePath.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //   start of the program                                                                                                 //
@@ -127,12 +36,12 @@ int main(int argc, char *argv[]) {
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
     SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
 
-    // RUNS THE CALCULATIONS --> IMPORTANT
-    InitializePath pathMain;
-    pathMain.boundsInitialize();
-    pathMain.projectileArrayInitialize();
-    pathMain.projectileArrayScale();
-    for (int i = 0; i < PATH_RESOLUTION; i++) {std::cout << "[" << i << "] " << pathMain.path_array_x[i] << std::endl;}
+    // RUNS THE PATH CALCULATIONS --> IMPORTANT
+    InitializePath pathInit;
+    pathInit.boundsInitialize();
+    pathInit.projectileArrayInitialize();
+    pathInit.projectileArrayScale();
+    for (int i = 0; i < PATH_RESOLUTION; i++) {std::cout << "[" << i << "] " << pathInit.path_array_x[i] << std::endl;}
 
     // creates a texture that that points can be rendered on
     SDL_Texture* pathTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_SIZE_X, WINDOW_SIZE_Y);
@@ -146,7 +55,7 @@ int main(int argc, char *argv[]) {
         // renders the rectangles to pathTexture
         SDL_SetRenderTarget(renderer, pathTexture);
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_Rect pointRect = {static_cast<int>(pathMain.path_array_x[i]), static_cast<int>(-pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2), 1, 1}; // you need the negative in front of path array since there's a stupid coordinate system
+        SDL_Rect pointRect = {static_cast<int>(pathInit.path_array_x[i]), static_cast<int>(-pathInit.path_array_y[i] + WINDOW_SIZE_Y / 2), 1, 1}; // you need the negative in front of path array since there's a stupid coordinate system
         SDL_RenderFillRect(renderer, &pointRect);
 
         // resets the renderer to display to the window
@@ -161,7 +70,7 @@ int main(int argc, char *argv[]) {
         // displays a leading rectangle that acts as the "projectile"
         if (i < PATH_RESOLUTION - 1) {
             SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-            SDL_Rect leadingPointRect = {static_cast<int>(pathMain.path_array_x[i]), static_cast<int>(-pathMain.path_array_y[i] + WINDOW_SIZE_Y / 2), 3, 3};
+            SDL_Rect leadingPointRect = {static_cast<int>(pathInit.path_array_x[i]), static_cast<int>(-pathInit.path_array_y[i] + WINDOW_SIZE_Y / 2), 3, 3};
             SDL_RenderFillRect(renderer, &leadingPointRect);
         }
 
@@ -174,14 +83,14 @@ int main(int argc, char *argv[]) {
 
     // the impact point (assumes the final element of path_array is the ending - it should be because of the element that was added in projectileScaleArray)
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_Rect end_rect = {static_cast<int>(pathMain.path_array_x[PATH_RESOLUTION]), static_cast<int>(pathMain.path_array_y[PATH_RESOLUTION] + WINDOW_SIZE_Y / 2), 3, 3};
+    SDL_Rect end_rect = {static_cast<int>(pathInit.path_array_x[PATH_RESOLUTION]), static_cast<int>(pathInit.path_array_y[PATH_RESOLUTION] + WINDOW_SIZE_Y / 2), 3, 3};
     SDL_RenderFillRect(renderer, &end_rect);
     
     // the max height reached
     int max_index = 0;
-    for (int i = 1; i < PATH_RESOLUTION; i++) { if (pathMain.path_array_y[i] > pathMain.path_array_y[max_index]) { max_index = i; } }
-    double max_x = pathMain.path_array_x[max_index];
-    double max_y = pathMain.path_array_y[max_index];
+    for (int i = 1; i < PATH_RESOLUTION; i++) { if (pathInit.path_array_y[i] > pathInit.path_array_y[max_index]) { max_index = i; } }
+    double max_x = pathInit.path_array_x[max_index];
+    double max_y = pathInit.path_array_y[max_index];
     SDL_SetRenderDrawColor(renderer, 255, 204, 0, 255);
     SDL_Rect max_rect = {static_cast<int>(max_x), static_cast<int>(-max_y + WINDOW_SIZE_Y / 2), 3, -3};
     SDL_RenderFillRect(renderer, &max_rect);
