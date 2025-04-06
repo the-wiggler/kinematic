@@ -16,41 +16,228 @@ int main(int argc, char *argv[]) {
     TTF_Init();
 
     // load font
-    TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 24);
+    TTF_Font* arial = TTF_OpenFont("assets/arial.ttf", 16);
+    TTF_Font* arialSmall = TTF_OpenFont("assets/arial.ttf", 24);
     if (!arial) std::cout << "FAILED TO LOAD FONT" << TTF_GetError() << std::endl;
-    // create text surface
-    SDL_Surface* textSurface;
-    SDL_Texture* textTexture;
+
+    // create text surfaces
+    SDL_Surface* commandInfoSurface;
+    SDL_Texture* commandInfoTexture;
+    SDL_Surface* velocityInputSurface = nullptr;
+    SDL_Texture* velocityInputTexture = nullptr;
+    SDL_Surface* angleInputSurface = nullptr;
+    SDL_Texture* angleInputTexture = nullptr;
+    SDL_Surface* iheightInputSurface = nullptr;
+    SDL_Texture* iheightInputTexture = nullptr;
 
     // creates a texture that that points can be rendered on
     SDL_Texture* pathTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
+    // colors
+    SDL_Color white = {255, 255, 255};
+
     bool running = true;
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // LOOP THAT KEEPS THE PROGRAM OPEN                                                                      //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     while (running) {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        SDL_StartTextInput();
 
-        // create text
-        SDL_Color white = {255, 255, 255};
-        textSurface = TTF_RenderText_Solid(arial, "KINEMATIC!", white);
-        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-        // get text dimensions and position it
+        // displays the text that asks for input velocity
+        velocityInputSurface = TTF_RenderText_Solid(arial, "Input Velocity: ", white);
+        velocityInputTexture = SDL_CreateTextureFromSurface(renderer, velocityInputSurface);
         int textWidth, textHeight;
-        SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
-        SDL_Rect textRect = {20, 20, textWidth, textHeight}; // Position at top-left with some margin
+        SDL_QueryTexture(velocityInputTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect velocityTextRect = {10, 10, textWidth, textHeight};
+        SDL_RenderCopy(renderer, velocityInputTexture, NULL, &velocityTextRect);
+        SDL_RenderPresent(renderer);
 
-        // RUNS THE PATH CALCULATIONS --> IMPORTANT
+        // displays the text that asks for input angle
+        angleInputSurface = TTF_RenderText_Solid(arial, "Input Angle: ", white);
+        angleInputTexture = SDL_CreateTextureFromSurface(renderer, angleInputSurface);
+        SDL_QueryTexture(angleInputTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect angleTextRect = {10, 10, textWidth, textHeight};
+        SDL_RenderCopy(renderer, angleInputTexture, NULL, &angleTextRect);
+        SDL_RenderPresent(renderer);
+
+        // displays the text that asks for input height
+        iheightInputSurface = TTF_RenderText_Solid(arial, "Input Initial Height: ", white);
+        iheightInputTexture = SDL_CreateTextureFromSurface(renderer, iheightInputSurface);
+        SDL_QueryTexture(iheightInputTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect iheightTextRect = {10, 10, textWidth, textHeight};
+        SDL_RenderCopy(renderer, iheightInputTexture, NULL, &iheightTextRect);
+        SDL_RenderPresent(renderer);
+
+        std::string velocity_input = "";
+        std::string angle_input = "";
+        std::string iheight_input = "";
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // USER INPUT                                                                                            //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        bool velocity_input_pass = false;
+        while (!velocity_input_pass) {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    running = false;
+                    velocity_input_pass = true;
+                }
+                else if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_RETURN) {
+                        velocity_input_pass = true;
+                    } 
+                    else if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                        velocity_input.pop_back();
+                    }
+                }
+                else if (event.type == SDL_TEXTINPUT) {
+                        velocity_input += event.text.text;
+                }
+            }
+
+            SDL_RenderClear(renderer);
+            
+            // Free old surface and texture
+            if (velocityInputSurface) {
+                SDL_FreeSurface(velocityInputSurface);
+                velocityInputSurface = nullptr;
+            }
+            if (velocityInputTexture) {
+                SDL_DestroyTexture(velocityInputTexture);
+                velocityInputTexture = nullptr;
+            }
+            
+            // Create new surface and texture with updated text
+            velocityInputSurface = TTF_RenderText_Solid(arial, ("Input Velocity: " + velocity_input).c_str(), white);
+            velocityInputTexture = SDL_CreateTextureFromSurface(renderer, velocityInputSurface);
+            
+            // Get dimensions and render
+            SDL_QueryTexture(velocityInputTexture, NULL, NULL, &textWidth, &textHeight);
+            velocityTextRect = {10, 10, textWidth, textHeight};
+            SDL_RenderCopy(renderer, velocityInputTexture, NULL, &velocityTextRect);
+            
+            SDL_RenderPresent(renderer);
+            SDL_Delay(16);
+        }
+        //////////////////////////////////
+                bool angle_input_pass = false;
+        while (!angle_input_pass) {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    running = false;
+                    angle_input_pass = true;
+                }
+                else if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_RETURN) {
+                        angle_input_pass = true;
+                    } 
+                    else if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                        angle_input.pop_back();
+                    }
+                }
+                else if (event.type == SDL_TEXTINPUT) {
+                        angle_input += event.text.text;
+                }
+            }
+
+            SDL_RenderClear(renderer);
+            
+            // Free old surface and texture
+            if (angleInputSurface) {
+                SDL_FreeSurface(angleInputSurface);
+                angleInputSurface = nullptr;
+            }
+            if (angleInputTexture) {
+                SDL_DestroyTexture(angleInputTexture);
+                angleInputTexture = nullptr;
+            }
+            
+            // Create new surface and texture with updated text
+            angleInputSurface = TTF_RenderText_Solid(arial, ("Input Angle: " + angle_input).c_str(), white);
+            angleInputTexture = SDL_CreateTextureFromSurface(renderer, angleInputSurface);
+            
+            // Get dimensions and render
+            SDL_QueryTexture(angleInputTexture, NULL, NULL, &textWidth, &textHeight);
+            angleTextRect = {10, 10, textWidth, textHeight};
+            SDL_RenderCopy(renderer, angleInputTexture, NULL, &angleTextRect);
+            
+            SDL_RenderPresent(renderer);
+            SDL_Delay(16);
+        }
+        //////////////////////////////////
+                bool iheight_input_pass = false;
+        while (!iheight_input_pass) {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    running = false;
+                    iheight_input_pass = true;
+                }
+                else if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_RETURN) {
+                        iheight_input_pass = true;
+                    } 
+                    else if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                        iheight_input.pop_back();
+                    }
+                }
+                else if (event.type == SDL_TEXTINPUT) {
+                        iheight_input += event.text.text;
+                }
+            }
+
+            SDL_RenderClear(renderer);
+            
+            // Free old surface and texture
+            if (iheightInputSurface) {
+                SDL_FreeSurface(iheightInputSurface);
+                iheightInputSurface = nullptr;
+            }
+            if (iheightInputTexture) {
+                SDL_DestroyTexture(iheightInputTexture);
+                iheightInputTexture = nullptr;
+            }
+            
+            // Create new surface and texture with updated text
+            iheightInputSurface = TTF_RenderText_Solid(arial, ("Input Initial Height: " + iheight_input).c_str(), white);
+            iheightInputTexture = SDL_CreateTextureFromSurface(renderer, iheightInputSurface);
+            
+            // Get dimensions and render
+            SDL_QueryTexture(iheightInputTexture, NULL, NULL, &textWidth, &textHeight);
+            iheightTextRect = {10, 10, textWidth, textHeight};
+            SDL_RenderCopy(renderer, iheightInputTexture, NULL, &iheightTextRect);
+            
+            SDL_RenderPresent(renderer);
+            SDL_Delay(16);
+        }
+        //////////////////////////////////
+
+
+        // create text box for commands
+        commandInfoSurface = TTF_RenderText_Solid(arial, "Commands: <r> - reset", white);
+        commandInfoTexture = SDL_CreateTextureFromSurface(renderer, commandInfoSurface);
+        SDL_QueryTexture(commandInfoTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect commandTextRect = {10, WINDOW_SIZE_Y - 20, textWidth, textHeight};
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // RUNS THE PATH CALCULATIONS --> Important                                                              //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         InitializePath pathInit;
+
+        // converts the input strings into usable double variables for calculation
+        pathInit.initial_velocity = std::stod(velocity_input);
+        pathInit.initial_angle = std::stod(angle_input);
+        pathInit.initial_height = std::stod(iheight_input);
+
         pathInit.boundsInitialize();
         pathInit.projectileArrayInitialize();
         pathInit.projectileArrayScale();
-        // for (int i = 0; i < PATH_RESOLUTION; i++) {std::cout << "[" << i << "] " << pathInit.path_array_x[i] << std::endl;}
 
         SDL_SetRenderTarget(renderer, pathTexture);
 
-        // maps the points for the projectile on the screen
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // MAPS THE POINTS FOR THE PROJECTILES ON THE SCREEN                                                     //
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         for (int i = 0; i < PATH_RESOLUTION; i++) {
             SDL_RenderClear(renderer);
 
@@ -66,8 +253,8 @@ int main(int argc, char *argv[]) {
             // displays pathTexture
             SDL_RenderCopy(renderer, pathTexture, NULL, NULL);
 
-            // displays textTexture
-            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+            // displays commandInfoTexture
+            SDL_RenderCopy(renderer, commandInfoTexture, NULL, &commandTextRect);
 
             // displays a leading rectangle that acts as the "projectile"
             if (i < PATH_RESOLUTION - 1) {
@@ -77,7 +264,7 @@ int main(int argc, char *argv[]) {
             }
 
             SDL_RenderPresent(renderer);
-            SDL_Delay(5);
+            SDL_Delay(1);
         }
 
         SDL_RenderClear(renderer);
@@ -103,24 +290,31 @@ int main(int argc, char *argv[]) {
         // displays pathTexture
         SDL_RenderCopy(renderer, pathTexture, NULL, NULL);
 
-        // displays textTexture
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+        // displays commandInfoTexture
+        SDL_RenderCopy(renderer, commandInfoTexture, NULL, &commandTextRect);
        
         SDL_RenderPresent(renderer);
 
+        // stops the rendering loop until a certain command is executed
         bool wait_for_reset = true;
         while (wait_for_reset) {
             while (SDL_PollEvent(&event)) {
+                // quits the program
                 if (event.type == SDL_QUIT) {
                     running = false;
                     wait_for_reset = false;
+                // re-renders the projectile when the letter "r" is pressed
                 } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r) {
                     wait_for_reset = false;
                 }
             }
+            SDL_Delay(16);
         }
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
+    SDL_FreeSurface(commandInfoSurface);
+    SDL_DestroyTexture(commandInfoTexture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyTexture(pathTexture);

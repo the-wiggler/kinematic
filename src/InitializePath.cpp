@@ -2,11 +2,6 @@
 #include <vector>
 #include "InitializePath.h"
 
-double initial_velocity = 800;
-double initial_angle = 30;
-double initial_height = 45;
-
-
 void InitializePath::boundsInitialize() {
 	double initial_angle_rad = initial_angle * (M_PI / 180.0);
             
