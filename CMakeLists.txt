@@ -7,9 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Source files
-add_executable(kinematic src/main.cpp
-               src/InitializePath.cpp
-    )
+add_executable(kinematic WIN32 src/main.cpp src/InitializePath.cpp)
 
 # Don't use SDL_main
 add_definitions(-DSDL_MAIN_HANDLED)
@@ -25,6 +23,8 @@ include_directories(
 
 if(WIN32 OR MSYS)
     message(STATUS "Configuring for Windows")
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 
     link_directories(
         ${PROJECT_SOURCE_DIR}/libs/SDL2/lib
